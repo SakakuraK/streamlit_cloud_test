@@ -64,7 +64,7 @@ if st.button("検索"):
         
         comment_youtube_search_result = json.loads(vector_search_res_json["comment_youtube"])
         comment_5ch_search_result = json.loads(vector_search_res_json["comment_5ch"])
-        comment_5ch_thread_title = json.loads(vector_search_res_json["comment_5ch_thread"])
+        comment_5ch_thread_title = vector_search_res_json["comment_5ch_thread"]
         
         if comment_youtube_search_result is not "":
             st.write("youtubeコメントからの検索")
