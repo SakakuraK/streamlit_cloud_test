@@ -1,5 +1,7 @@
 import streamlit as st
 import boto3
+import requests
+import json
 
 import pandas as pd
 
@@ -41,5 +43,21 @@ for dataset in datasets_list:
 
 
 # プルダウンリストと検索ボックスを表示する
-selected_collection = st.selectbox("検索したい配信者を選択してください", collection_list)
+selected_streamer_name = st.selectbox("検索したい配信者を選択してください", collection_list)
 search_word = st.text_input("検索するワードを入力してください。")
+
+# 検索ボタン押した時
+if st.button("検索"):
+    if search_word and len(datasets_list) > 0:
+        st.write("選択配信者＞",selected_streamer_name)
+        st.write("検索ワード＞",search_word)
+        
+        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word}
+        # リクエストヘッダー
+        headers = {'Content-Type': 'application/json'}
+        
+        # ベクトル検索用API
+        url = 'https://elo69unmp7.execute-api.us-east-1.amazonaws.com/test/posttest'
+        
+        vector_search_res = requests.post(url, data = json.dumps(myobj), headers=headers)
+        st.text(vector_search_res.text)
