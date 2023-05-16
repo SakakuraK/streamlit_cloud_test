@@ -23,10 +23,9 @@ conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
 
-st.title("Stream lit IN cloud")
+st.title("Streamlit_cloud_配信者コメント検索")
 
-st.text("streamlit cloud動作テスト\ngithubにpy置いてそれをstreamlit cloudから呼び出す")
-st.text("S3読み込みからDB接続→検索フォームテスト中")
+st.text("配信者選択、検索キーワードを入力して検索すると\nAPIgatewayを経由して\nlambdaプログラムで\nlightsailに設置したqdrantからベクトル検索、meilisearchから全文検索")
 
 
 # 検索可能なデータセット一覧取得
@@ -73,11 +72,11 @@ if st.button("検索"):
         comment_5ch_thread_title = vector_search_res_json["comment_5ch_thread"]
         
         if comment_youtube_search_result is not "":
-            st.write("youtubeコメントからの検索")
+            st.write("【youtubeコメントからの検索】")
             st.dataframe( comment_youtube_search_result )
         
         if comment_5ch_search_result is not "":
-            st.write("5ch書き込みからの検索")
+            st.write("【5ch書き込みからの検索】")
             st.dataframe( comment_5ch_search_result )
             st.write("引用元：",comment_5ch_thread_title)
         
