@@ -16,13 +16,19 @@ s3 = boto3.client('s3',
 S3_BUCKET = "streamer-review"
 SQLITE_FILE = "streamer_db.sqlite"
 
-s3.download_file(S3_BUCKET, SQLITE_FILE, SQLITE_FILE)
+
+response = s3.list_objects_v2(
+    Bucket=S3_BUCKET,
+    Prefix=SQLITE_FILE,
+)
+
+#s3.download_file(S3_BUCKET, SQLITE_FILE, SQLITE_FILE)
 
  #データベースに接続
-filepath = SQLITE_FILE
-conn = sqlite3.connect(filepath)
-conn.row_factory = sqlite3.Row
-cur = conn.cursor()
+#filepath = SQLITE_FILE
+#conn = sqlite3.connect(filepath)
+#conn.row_factory = sqlite3.Row
+#cur = conn.cursor()
 
 
 st.title("Stream lit IN cloud")
