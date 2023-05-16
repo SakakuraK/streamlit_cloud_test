@@ -60,4 +60,12 @@ if st.button("検索"):
         url = 'https://elo69unmp7.execute-api.us-east-1.amazonaws.com/test/posttest'
         
         vector_search_res = requests.post(url, data = json.dumps(myobj), headers=headers)
-        st.text(vector_search_res.text)
+        vector_search_res_json = json.loads(vector_search_res)
+        
+        st.text(vector_search_res_json["comment_youtube"])
+        st.text(vector_search_res_json["comment_5ch"])
+        st.text(vector_search_res_json["comment_5ch_thread"])
+        
+        st.dataframe(vector_search_res_json["comment_youtube"])
+        
+        #st.text(vector_search_res.text)
