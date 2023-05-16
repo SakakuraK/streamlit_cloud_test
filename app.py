@@ -62,8 +62,14 @@ if st.button("検索"):
         vector_search_res = requests.post(url, data = json.dumps(myobj), headers=headers)
         vector_search_res_json = json.loads(vector_search_res.text)
         
-        comment_youtube_search_result = json.loads(vector_search_res_json["comment_youtube"])
-        comment_5ch_search_result = json.loads(vector_search_res_json["comment_5ch"])
+        comment_youtube_search_result = ""
+        if vector_search_res_json["comment_youtube"] is not "":
+            comment_youtube_search_result = json.loads(vector_search_res_json["comment_youtube"])
+        
+        comment_5ch_search_result = ""
+        if vector_search_res_json["comment_5ch"] is not "":
+            comment_5ch_search_result = json.loads(vector_search_res_json["comment_5ch"])
+        
         comment_5ch_thread_title = vector_search_res_json["comment_5ch_thread"]
         
         if comment_youtube_search_result is not "":
