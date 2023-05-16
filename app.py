@@ -63,9 +63,10 @@ if st.button("検索"):
         vector_search_res_json = json.loads(vector_search_res.text)
         
         st.text(vector_search_res_json["comment_youtube"])
+        st.text( json.loads(vector_search_res_json["comment_youtube"]) )
         st.text(vector_search_res_json["comment_5ch"])
         st.text(vector_search_res_json["comment_5ch_thread"])
         
-        st.dataframe(vector_search_res_json["comment_youtube"])
+        st.dataframe( json.loads(vector_search_res_json["comment_youtube"]) )
         
         #st.text(vector_search_res.text)
