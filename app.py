@@ -5,7 +5,22 @@ import pandas as pd
 
 import sqlite3
 
+# TODO implement
+s3 = boto3.client('s3')
+
+S3_BUCKET = "streamer-review"
+SQLITE_FILE = "streamer_db.sqlite"
+
+s3.download_file(S3_BUCKET, SQLITE_FILE, SQLITE_FILE)
+
+ #データベースに接続
+filepath = SQLITE_FILE
+conn = sqlite3.connect(filepath)
+conn.row_factory = sqlite3.Row
+cur = conn.cursor()
+
+
 st.title("Stream lit IN cloud")
 
 st.text("streamlit cloud動作テスト\ngithubにpy置いてそれをstreamlit cloudから呼び出す")
-#st.text("登録したCSVからの検索は左メニュー「csv_search」")
+st.text("S3読み込みからDB接続までテスト中")
