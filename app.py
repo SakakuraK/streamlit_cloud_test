@@ -62,11 +62,19 @@ if st.button("検索"):
         vector_search_res = requests.post(url, data = json.dumps(myobj), headers=headers)
         vector_search_res_json = json.loads(vector_search_res.text)
         
-        st.text(vector_search_res_json["comment_youtube"])
-        st.text( json.loads(vector_search_res_json["comment_youtube"]) )
-        st.text(vector_search_res_json["comment_5ch"])
-        st.text(vector_search_res_json["comment_5ch_thread"])
+        comment_youtube_search_result = json.loads(vector_search_res_json["comment_youtube"])
+        comment_5ch_search_result = json.loads(vector_search_res_json["comment_5ch"])
+        comment_5ch_thread_title = json.loads(vector_search_res_json["comment_5ch_thread"])
         
-        st.dataframe( json.loads(vector_search_res_json["comment_youtube"]) )
+        if comment_youtube_search_result is not "":
+            st.write("youtubeコメントからの検索")
+            st.dataframe( comment_youtube_search_result )
+        
+        if comment_5ch_search_result is not "":
+            st.write("5ch書き込みからの検索")
+            st.dataframe( comment_5ch_search_result )
+            st.write("引用元：",comment_5ch_thread_title)
+        
+        
         
         #st.text(vector_search_res.text)
