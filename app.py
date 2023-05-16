@@ -7,7 +7,7 @@ import sqlite3
 
 # TODO implement
 s3 = boto3.client('s3',
-    region_name=us-east-1,
+    region_name='us-east-1',
     # Hard coded strings as credentials, not recommended.
     aws_access_key_id='AKIAXIRPBBKHFJW5NCGI',
     aws_secret_access_key='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'
