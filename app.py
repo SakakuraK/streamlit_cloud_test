@@ -54,8 +54,9 @@ if st.button("検索"):
         st.write("選択した配信者＞",selected_streamer_name)
         st.write("検索ワード＞",search_word)
         st.write("表示件数＞",result_limit)
+        st.write("閾値＞",threshold)
         
-        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word, "result_limit": result_limit}
+        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word, "result_limit": result_limit, "threshold": threshold}
         # リクエストヘッダー
         headers = {'Content-Type': 'application/json'}
         
