@@ -45,14 +45,17 @@ for dataset in datasets_list:
 # プルダウンリストと検索ボックスを表示する
 selected_streamer_name = st.selectbox("検索したい配信者を選択してください", collection_list)
 search_word = st.text_input("検索するワードを入力してください。")
+result_limit = st.number_input("表示件数", 5, 500, 10)
+threshold = st.number_input("閾値", 0.60, 0.99, 0.70)
 
 # 検索ボタン押した時
 if st.button("検索"):
     if search_word and len(datasets_list) > 0:
-        st.write("選択配信者＞",selected_streamer_name)
+        st.write("選択した配信者＞",selected_streamer_name)
         st.write("検索ワード＞",search_word)
+        st.write("表示件数＞",result_limit)
         
-        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word}
+        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word, "result_limit": result_limit}
         # リクエストヘッダー
         headers = {'Content-Type': 'application/json'}
         
