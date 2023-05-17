@@ -3,6 +3,8 @@ import boto3
 import requests
 import json
 
+import os
+
 import pandas as pd
 
 import sqlite3
@@ -27,6 +29,7 @@ st.title("Streamlit_cloud_配信者コメント検索")
 
 st.text("配信者選択、検索キーワードを入力して検索すると\nAPIgatewayを経由して\nlambdaプログラムで\nlightsailに設置したqdrantからベクトル検索、meilisearchから全文検索")
 
+st.text(os.environ['TEST_ENV'])
 
 # 検索可能なデータセット一覧取得
 collection_list = []
@@ -62,20 +65,20 @@ if st.button("検索"):
         vector_search_res_json = json.loads(vector_search_res.text)
         
         comment_youtube_search_result = ""
-        if vector_search_res_json["comment_youtube"] is not "":
+        if vector_search_res_json["comment_youtube"] != "":
             comment_youtube_search_result = json.loads(vector_search_res_json["comment_youtube"])
         
         comment_5ch_search_result = ""
-        if vector_search_res_json["comment_5ch"] is not "":
+        if vector_search_res_json["comment_5ch"] != "":
             comment_5ch_search_result = json.loads(vector_search_res_json["comment_5ch"])
         
         comment_5ch_thread_title = vector_search_res_json["comment_5ch_thread"]
         
-        if comment_youtube_search_result is not "":
+        if comment_youtube_search_result != "":
             st.write("【youtubeコメントからの検索】")
             st.dataframe( comment_youtube_search_result )
         
-        if comment_5ch_search_result is not "":
+        if comment_5ch_search_result != "":
             st.write("【5ch書き込みからの検索】")
             st.dataframe( comment_5ch_search_result )
             st.write("引用元：",comment_5ch_thread_title)
