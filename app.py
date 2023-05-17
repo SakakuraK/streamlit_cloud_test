@@ -29,8 +29,6 @@ st.title("Streamlit_cloud_配信者コメント検索")
 
 st.text("配信者選択、検索キーワードを入力して検索すると\nAPIgatewayを経由して\nlambdaプログラムで\nlightsailに設置したqdrantからベクトル検索、meilisearchから全文検索")
 
-st.text(os.environ['TEST_ENV'])
-
 # 検索可能なデータセット一覧取得
 collection_list = []
 # データベースから取得
@@ -59,7 +57,7 @@ if st.button("検索"):
         headers = {'Content-Type': 'application/json'}
         
         # ベクトル検索用API
-        url = 'https://elo69unmp7.execute-api.us-east-1.amazonaws.com/test/posttest'
+        url = os.environ['REST_API_URL']
         
         vector_search_res = requests.post(url, data = json.dumps(myobj), headers=headers)
         vector_search_res_json = json.loads(vector_search_res.text)
