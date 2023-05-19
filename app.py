@@ -72,8 +72,8 @@ if st.button("検索"):
         st.write("検索ワード＞",search_word)
         st.write("表示件数＞",result_limit)
         st.write("閾値＞",threshold)
-        start_dt_unix = None
-        end_dt_unix = None
+        start_dt_unix = 0
+        end_dt_unix = 0
         if flgCheck_date:
             start_dt = datetime.datetime.combine(start_date, start_time)
             end_dt = datetime.datetime.combine(end_date, end_time)
