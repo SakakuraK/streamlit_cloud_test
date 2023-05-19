@@ -2,7 +2,7 @@ import streamlit as st
 import boto3
 import requests
 import json
-
+import datetime
 import os
 
 import pandas as pd
@@ -48,6 +48,23 @@ search_word = st.text_input("検索するワードを入力してください。
 result_limit = st.number_input("表示件数", 5, 500, 10)
 threshold = st.number_input("閾値", 0.60, 0.99, 0.70)
 
+flgCheck_date = st.checkbox('日付指定して検索')
+if flgCheck_date:
+    # 日付指定
+    start_date = st.date_input('開始日時',
+                      min_value=datetime.date(2023, 3, 1),
+                      max_value=datetime.date.today(),
+                      value=datetime.date.today()
+                    )
+    start_time = st.time_input('', datetime.time(0, 0))
+    st.write("～")
+    end_date = st.date_input('開始日時',
+                      min_value=datetime.date(2023, 3, 1),
+                      max_value=datetime.date.today(),
+                      value=datetime.date.today()
+                    )
+    end_time = st.time_input('', datetime.time(23, 59))
+
 # 検索ボタン押した時
 if st.button("検索"):
     if search_word and len(datasets_list) > 0:
@@ -55,6 +72,11 @@ if st.button("検索"):
         st.write("検索ワード＞",search_word)
         st.write("表示件数＞",result_limit)
         st.write("閾値＞",threshold)
+        start_dt = None
+        end_dt = None
+        if flgCheck_date:
+            start_dt = datetime.datetime.combine(start_date, start_time)
+            end_dt = datetime.datetime.combine(end_date, end_time)
         
         myobj = {"streamer_name": selected_streamer_name, "search_word": search_word, "result_limit": result_limit, "threshold": threshold}
         # リクエストヘッダー
