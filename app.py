@@ -58,7 +58,7 @@ if flgCheck_date:
                     )
     start_time = st.time_input('', datetime.time(0, 0))
     st.write("～")
-    end_date = st.date_input('開始日時',
+    end_date = st.date_input('終了日時',
                       min_value=datetime.date(2023, 3, 1),
                       max_value=datetime.date.today(),
                       value=datetime.date.today()
@@ -72,13 +72,23 @@ if st.button("検索"):
         st.write("検索ワード＞",search_word)
         st.write("表示件数＞",result_limit)
         st.write("閾値＞",threshold)
-        start_dt = None
-        end_dt = None
+        start_dt_unix = None
+        end_dt_unix = None
         if flgCheck_date:
             start_dt = datetime.datetime.combine(start_date, start_time)
             end_dt = datetime.datetime.combine(end_date, end_time)
+            st.write("書き込み期間範囲指定＞",start_dt,"から",end_dt,"まで")
+            # unix化 JTCのままなので9時間引く
+            start_dt_unix = int(start_dt.timestamp()) - (9 * 60 * 60)
+            end_dt_unix = int(end_dt.timestamp()) - (9 * 60 * 60)
         
-        myobj = {"streamer_name": selected_streamer_name, "search_word": search_word, "result_limit": result_limit, "threshold": threshold}
+        myobj = {"streamer_name": selected_streamer_name,
+                 "search_word": search_word,
+                 "result_limit": result_limit,
+                 "threshold": threshold,
+                 "start_dt_unix": start_dt_unix,
+                 "end_dt_unix": end_dt_unix
+                 }
         # リクエストヘッダー
         headers = {'Content-Type': 'application/json'}
         
