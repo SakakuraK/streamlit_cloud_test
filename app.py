@@ -52,14 +52,14 @@ flgCheck_date = st.checkbox('日付指定して検索')
 if flgCheck_date:
     # 日付指定
     start_date = st.date_input('開始日時',
-                      min_value=datetime.date(2023, 3, 1),
+                      min_value=datetime.date(2022, 1, 1),
                       max_value=datetime.date.today(),
                       value=datetime.date.today()
                     )
     start_time = st.time_input('', datetime.time(0, 0))
     st.write("～")
     end_date = st.date_input('終了日時',
-                      min_value=datetime.date(2023, 3, 1),
+                      min_value=datetime.date(2022, 1, 1),
                       max_value=datetime.date.today(),
                       value=datetime.date.today()
                     )
