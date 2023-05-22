@@ -9,6 +9,8 @@ import pandas as pd
 
 import sqlite3
 
+import plotly.graph_objects as go
+
 # TODO implement
 s3 = boto3.client('s3')
 
@@ -111,6 +113,28 @@ if st.button("検索"):
         if comment_youtube_search_result != "":
             st.write("【youtubeコメントからの検索】")
             st.dataframe( comment_youtube_search_result )
+            
+            # DataFrameの作成
+            df_y = pd.DataFrame(comment_youtube_search_result)
+
+            # datetime列を日時型に変換
+            df_y['datetime'] = pd.to_datetime(df_y['datetime'])
+
+            # 日付別にグループ化してカウント
+            daily_counts = df_y.groupby(df_y['datetime'].dt.date).size().reset_index(name='count')
+            
+            # Plotlyの棒グラフを作成
+            fig = go.Figure(data=[go.Bar(x=daily_counts['index'], y=daily_counts['count'])])
+
+            # グラフのレイアウト設定
+            fig.update_layout(
+                xaxis=dict(title='Date'),
+                yaxis=dict(title='Count'),
+            )
+
+            # Plotlyの棒グラフをStreamlitで表示
+            st.plotly_chart(fig)
+
         
         if comment_5ch_search_result != "":
             st.write("【5ch書き込みからの検索】")
