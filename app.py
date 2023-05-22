@@ -124,7 +124,7 @@ if st.button("検索"):
             daily_counts = df_y.groupby(df_y['datetime'].dt.date).size().reset_index(name='count')
             
             # Plotlyの棒グラフを作成
-            fig = go.Figure(data=[go.Bar(x=daily_counts['index'], y=daily_counts['count'])])
+            fig = go.Figure(data=[go.Bar(x=daily_counts['datetime'], y=daily_counts['count'])])
 
             # グラフのレイアウト設定
             fig.update_layout(
