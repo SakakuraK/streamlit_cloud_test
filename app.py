@@ -11,6 +11,36 @@ import sqlite3
 
 import plotly.graph_objects as go
 
+# Streamlitのデフォルトのスタイルを無効にする
+st.set_page_config(  # 全体の設定
+    page_title="YoutubeStreamerComments",  # タイトル
+    page_icon=None,  # アイコン（Noneで非表示）
+    layout="wide",  # レイアウト
+    initial_sidebar_state="expanded",  # サイドバーの初期状態
+)
+
+hide_footer_style = """
+    <style>
+    footer {
+        visibility: hidden;
+    }
+    </style>
+"""
+st.markdown(hide_footer_style, unsafe_allow_html=True)
+
+# CSSを使用してDataFrameを表示
+st.markdown("""
+    <style>
+        .dataframe th {
+            background-color: #f2f2f2;
+        }
+        .dataframe td {
+            background-color: #ffffff;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 # TODO implement
 s3 = boto3.client('s3')
 
@@ -47,25 +77,49 @@ for dataset in datasets_list:
 # プルダウンリストと検索ボックスを表示する
 selected_streamer_name = st.selectbox("検索したい配信者を選択してください", collection_list)
 search_word = st.text_input("検索するワードを入力してください。")
-result_limit = st.number_input("表示件数", 5, 500, 10)
-threshold = st.number_input("閾値", 0.60, 0.99, 0.70)
+number_input1, number_input2 = st.columns(2)
+with number_input1:
+    result_limit = st.number_input("表示件数", 5, 500, 10)
+with number_input2:
+    threshold = st.number_input("閾値", 0.60, 0.99, 0.70)
 
 flgCheck_date = st.checkbox('日付指定して検索')
 if flgCheck_date:
+    col1, col2, col3, col4, col5 = st.columns(5)
     # 日付指定
-    start_date = st.date_input('開始日時',
+    with col1:
+        start_date = st.date_input('開始日時',
+                          min_value=datetime.date(2022, 1, 1),
+                          max_value=datetime.date.today(),
+                          value=datetime.date.today()
+                        )
+    with col2:
+        start_time = st.time_input('', datetime.time(0, 0))
+    with col3:
+        st.write("<div style='display: flex; justify-content: center; align-items: center; margin-top: 40px;'>～</div>", unsafe_allow_html=True)
+    with col4:
+        end_date = st.date_input('終了日時',
                       min_value=datetime.date(2022, 1, 1),
                       max_value=datetime.date.today(),
                       value=datetime.date.today()
                     )
-    start_time = st.time_input('', datetime.time(0, 0))
-    st.write("～")
-    end_date = st.date_input('終了日時',
-                      min_value=datetime.date(2022, 1, 1),
-                      max_value=datetime.date.today(),
-                      value=datetime.date.today()
-                    )
-    end_time = st.time_input('', datetime.time(23, 59))
+    with col5:
+        end_time = st.time_input('', datetime.time(23, 59))
+    st.container().markdown(
+        """
+        <style>
+        .stDateInput>div {
+            display: flex;
+            align-items: center;
+        }
+        .stDateInput>div>div {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # 検索ボタン押した時
 if st.button("検索"):
@@ -112,7 +166,10 @@ if st.button("検索"):
         
         if comment_youtube_search_result != "":
             st.write("【youtubeコメントからの検索】")
-            st.dataframe( comment_youtube_search_result )
+            df_y = pd.DataFrame(comment_youtube_search_result)
+            st.dataframe(df_y)
+            
+            #st.dataframe( comment_youtube_search_result )
             
             # DataFrameの作成
             df_y = pd.DataFrame(comment_youtube_search_result)
@@ -139,6 +196,28 @@ if st.button("検索"):
         if comment_5ch_search_result != "":
             st.write("【5ch書き込みからの検索】")
             st.dataframe( comment_5ch_search_result )
+            
+            # DataFrameの作成
+            df_5 = pd.DataFrame(comment_5ch_search_result)
+
+            # datetime列を日時型に変換
+            df_5['datetime'] = pd.to_datetime(df_5['datetime'])
+
+            # 日付別にグループ化してカウント
+            daily_counts = df_5.groupby(df_5['datetime'].dt.hour).size().reset_index(name='count')
+            
+            # Plotlyの棒グラフを作成
+            fig = go.Figure(data=[go.Bar(x=daily_counts['datetime'], y=daily_counts['count'])])
+
+            # グラフのレイアウト設定
+            fig.update_layout(
+                xaxis=dict(title='Date'),
+                yaxis=dict(title='Count'),
+            )
+
+            # Plotlyの棒グラフをStreamlitで表示
+            st.plotly_chart(fig)
+            
             st.write("引用元：",comment_5ch_thread_title)
         
         
